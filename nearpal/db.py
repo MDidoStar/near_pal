@@ -28,6 +28,10 @@ SELF_SIGNUP_AGE = 15
 # Under-15 bands are parent-managed; 15-17 and 18+ have their own accounts.
 AGE_BANDS = [(4, 6), (7, 9), (10, 12), (13, 14), (15, 17), (18, 120)]
 
+# People are only ever matched with the same gender. Profiles without a gender
+# (created before this field existed) are never matched until it's set.
+GENDERS = ["Male", "Female"]
+
 
 def age_band(age: int) -> str:
     for lo, hi in AGE_BANDS:
@@ -51,7 +55,8 @@ def get_db():
 def _setup(db):
     db.parents.create_index([("email", ASCENDING)], unique=True)
     db.children.create_index([("parent_id", ASCENDING)])
-    db.children.create_index([("city_key", ASCENDING), ("age_band", ASCENDING), ("hobbies", ASCENDING)])
+    db.children.create_index([("city_key", ASCENDING), ("age_band", ASCENDING),
+                              ("gender", ASCENDING), ("hobbies", ASCENDING)])
     db.hobbies.create_index([("key", ASCENDING)], unique=True)
     db.connections.create_index([("from_child", ASCENDING), ("to_child", ASCENDING)], unique=True)
     if db.hobbies.count_documents({}) == 0:
@@ -123,10 +128,13 @@ def set_hobby_approved(db, hobby_id, approved: bool):
 
 
 # ---------- children ----------
-def add_child(db, parent, first_name, age, hobbies):
+def add_child(db, parent, first_name, age, hobbies, gender):
+    if gender not in GENDERS:
+        raise ValueError("gender must be one of " + ", ".join(GENDERS))
     return db.children.insert_one({
         "parent_id": parent["_id"],
         "first_name": first_name.strip(),
+        "gender": gender,
         "age": int(age),
         "age_band": age_band(int(age)),
         "hobbies": hobbies,
@@ -148,6 +156,12 @@ def update_child_hobbies(db, child_id, parent_id, hobbies):
                            {"$set": {"hobbies": hobbies}})
 
 
+def set_child_gender(db, child_id, parent_id, gender):
+    if gender in GENDERS:
+        db.children.update_one({"_id": oid(child_id), "parent_id": oid(parent_id)},
+                               {"$set": {"gender": gender}})
+
+
 def get_child(db, child_id):
     return db.children.find_one({"_id": oid(child_id)})
 
@@ -159,9 +173,12 @@ def delete_child(db, child_id, parent_id):
 
 
 def find_matches(db, child):
-    """People in the same city and age band who share at least one hobby.
+    """People of the same gender, city and age band who share at least one hobby.
     Default order: same neighborhood, more shared hobbies, closer age."""
+    if child.get("gender") not in GENDERS:
+        return []
     cursor = db.children.find({
+        "gender": child["gender"],
         "city_key": child["city_key"],
         "age_band": child["age_band"],
         "hobbies": {"$in": child["hobbies"]},
@@ -187,6 +204,8 @@ def connection_between(db, child_a, child_b):
 def send_request(db, from_child, to_child):
     if from_child["age_band"] != to_child["age_band"]:  # never connect across age bands
         return None
+    if from_child.get("gender") not in GENDERS or from_child.get("gender") != to_child.get("gender"):
+        return None  # never connect different genders
     if connection_between(db, from_child["_id"], to_child["_id"]):
         return None
     return db.connections.insert_one({
