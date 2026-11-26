@@ -1,0 +1,5 @@
+.streamlit/secrets.toml
+app.py
+nearpal/
+__pycache__/
+*.pyc
