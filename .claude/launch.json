@@ -1,0 +1,19 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "nearpal",
+      "runtimeExecutable": "C:\\Users\\Lenovo\\miniconda3\\Scripts\\streamlit.exe",
+      "runtimeArgs": ["run", "app.py", "--server.headless", "true", "--server.port", "8510"],
+      "port": 8510,
+      "autoPort": false
+    },
+    {
+      "name": "nearpal-demo",
+      "runtimeExecutable": "C:\\Users\\Lenovo\\miniconda3\\Scripts\\streamlit.exe",
+      "runtimeArgs": ["run", "C:\\Users\\Lenovo\\AppData\\Local\\Temp\\claude\\f6f61e0515cde0a6\\c5877d46-c52e-4523-8024-99b1204b9017\\scratchpad\\demo_app.py", "--server.headless", "true", "--server.port", "8520"],
+      "port": 8520,
+      "autoPort": false
+    }
+  ]
+}
