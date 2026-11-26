@@ -43,9 +43,9 @@ def is_hobby_appropriate(hobby: str):
 
 
 @st.cache_data(ttl=3600, show_spinner=False)
-def rank_matches(my_age: int, my_hobbies: tuple, candidates_json: str):
-    """Rank candidate pals. Candidates are already filtered (same city and age band);
-    the AI only orders them, it can't add anyone.
+def rank_matches(my_age: int, my_hobbies: tuple, candidates_json: str, gender: str = ""):
+    """Rank candidate pals. Candidates are already filtered in the database (same
+    gender, city and age band); the AI only orders them, it can't add anyone.
 
     candidates_json: JSON list of {"id", "age", "shared_hobbies", "same_neighborhood"}.
     Returns [{"id", "reason"}] best first, or None if the AI failed."""
@@ -53,8 +53,11 @@ def rank_matches(my_age: int, my_hobbies: tuple, candidates_json: str):
     prompt = f"""
 You match people for a hobby-buddy app. Rank the candidates as pals for this person.
 
-Person: age {my_age}, hobbies: {", ".join(my_hobbies)}
-Candidates: {candidates_json}
+Person: {gender}, age {my_age}, hobbies: {", ".join(my_hobbies)}
+Candidates (all {gender}): {candidates_json}
+
+Hard rule: males are never matched with females. Only rank the candidates given;
+they have already been checked to be the same gender. Never suggest anyone else.
 
 Ranking rules, most important first:
 1. Age: smaller age gap is better. For children a gap of 1 year matters a lot;
@@ -91,10 +94,11 @@ def _supervision_rule(ages):
     return "Adults: public places only; any reasonable time."
 
 
-def plan_meetups(hobbies, ages, country, governorate, city, neighborhoods, availability, notes=""):
+def plan_meetups(hobbies, ages, country, governorate, city, neighborhoods, availability, notes="",
+                 gender=""):
     """Ask the AI for 3 meetup suggestions at public places, suited to the ages."""
     prompt = f"""
-You help plan a first meetup between two hobby pals.
+You help plan a first meetup between two hobby pals (both {gender or "the same gender"}).
 
 Ages: {", ".join(str(a) for a in ages)}
 Supervision: {_supervision_rule(ages)}
