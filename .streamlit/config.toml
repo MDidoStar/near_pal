@@ -1,0 +1,21 @@
+[theme]
+base = "light"
+primaryColor = "#FF5E7E"
+backgroundColor = "#FFF8EE"
+secondaryBackgroundColor = "#FFF0DC"
+textColor = "#2D2A4A"
+linkColor = "#6C5CE7"
+borderColor = "#F3DFC6"
+showWidgetBorder = true
+baseRadius = "large"
+buttonRadius = "full"
+font = "Nunito:https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap"
+headingFont = "Fredoka:https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&display=swap"
+headingFontWeights = [700, 700, 600, 600, 600, 600]
+
+[theme.sidebar]
+backgroundColor = "#5B4BD6"
+secondaryBackgroundColor = "#6F60E8"
+textColor = "#FFFFFF"
+primaryColor = "#FFD93D"
+borderColor = "#7E70F0"
