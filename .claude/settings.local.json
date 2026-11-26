@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl -s https://api.github.com/repos/dr5hn/countries-states-cities-database/contents/json)",
+      "Bash(python -c \"import sys,json; [print\\(f['name'], f['size']\\) for f in json.load\\(sys.stdin\\)]\")",
+      "Bash(curl -sL -o \"C:/Users/Lenovo/AppData/Local/Temp/claude/f6f61e0515cde0a6/c5877d46-c52e-4523-8024-99b1204b9017/scratchpad/dl/csc.json\" https://raw.githubusercontent.com/dr5hn/countries-states-cities-database/master/json/countries%2Bstates%2Bcities.json)",
+      "PowerShell(python -m pip install -q google-genai)",
+      "PowerShell(python -m pip install -q --target \"C:\\\\Users\\\\Lenovo\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\f6f61e0515cde0a6\\\\c5877d46-c52e-4523-8024-99b1204b9017\\\\scratchpad\\\\testlibs\" mongomock)",
+      "PowerShell(python -c \"import google.genai; print\\('genai', google.genai.__version__\\)\")",
+      "Bash(PYTHONIOENCODING=utf-8 python test_nearpal.py)",
+      "PowerShell(python -m pip install -q groq 2>$null)",
+      "PowerShell(python -c \"import groq; print\\('groq', groq.__version__\\)\")",
+      "PowerShell(Get-Command streamlit, python, pip -All -ErrorAction SilentlyContinue)",
+      "PowerShell(python -c \"import sys; print\\(sys.executable\\)\")",
+      "PowerShell($c = Get-NetTCPConnection -LocalPort 8501 -State Listen -ErrorAction SilentlyContinue; foreach \\($x in $c\\) { $p = Get-CimInstance Win32_Process -Filter \"ProcessId=$\\($x.OwningProcess\\)\"; \"$\\($p.ProcessId\\) | $\\($p.ExecutablePath\\) | $\\($p.CommandLine\\)\" })",
+      "PowerShell(& \"C:\\\\Users\\\\Lenovo\\\\miniconda3\\\\python.exe\" -m pip install -q -r requirements.txt; & \"C:\\\\Users\\\\Lenovo\\\\miniconda3\\\\python.exe\" -c \"import groq, pymongo, streamlit, requests; print\\('groq', groq.__version__, '| pymongo', pymongo.__version__, '| streamlit', streamlit.__version__\\)\")",
+      "Bash(PYTHONIOENCODING=utf-8 \"C:/Users/Lenovo/miniconda3/python.exe\" test_nearpal2.py)"
+    ]
+  }
+}
